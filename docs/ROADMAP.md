@@ -2,9 +2,20 @@
 
 ## Current Position
 
-Phase 1〜14.1 completed.
+**Phase 25 completed.** （最終同期: 2026-06-16）
 
-Tactical Swing OSは、日次分析、週次レビュー、月次較正、AI Feedback、News Narrative、Dashboard、Model State Proposal、Safety Audit、Weights Patch Proposal、Human Reviewまで到達しています。
+Tactical Swing OS は、日次分析・週次レビュー・月次較正・AI Feedback・News Narrative・
+Dashboard・Model State Proposal・Safety Audit・Weights Patch（提案+人間レビュー）に加え、
+提案採用追跡・重み履歴・メタ学習・自動較正候補・人間オーバーライド分析・ポートフォリオ層、
+さらに統計的健全性（SG/RD/NQ/BC/DSR/TC）と**監査・品質トラック**
+（Narrative Lookahead Audit / Adversarial Review / Data Health / Operational Runbook）まで到達。
+
+到達点の3層:
+- **計器**: 各分析レイヤー
+- **監査網**: Narrative Lookahead Audit / Adversarial Review
+- **計器の健全性**: Data Health / Freshness
+
+KPI は EVALUATIONS 蓄積件数（目標: 100 → 300 → 1000）。
 
 ## Completed Phases
 
@@ -16,51 +27,55 @@ Tactical Swing OSは、日次分析、週次レビュー、月次較正、AI Fee
 - Phase 6: Weekly review
 - Phase 7: Weekly review from Sheets
 - Phase 8: Monthly calibration
-- Phase 9: Dashboard
-- Phase 9.1: GitHub Pages dashboard publishing
-- Phase 9.2: Japanese dashboard localization
-- Phase 10: AI Feedback and Dashboard integration
-- Phase 10.4: JST timestamp display
-- Phase 11: News narrative layer
-- Phase 11.1: News conflict handling and Japanese summaries
+- Phase 9 / 9.1 / 9.2: Dashboard / Pages publishing / Japanese localization
+- Phase 10 / 10.4: AI Feedback / JST timestamp display
+- Phase 11 / 11.1: News narrative layer / conflict handling
 - Phase 12: Pending re-evaluation and latest evaluation view
-- Phase 13: Model State update proposals
-- Phase 13.1: Model State safety audit
-- Phase 14: Human-approved weights patch proposals
-- Phase 14.1: Weights patch human review
+- Phase 13 / 13.1: Model State update proposals / safety audit
+- Phase 14 / 14.1: Human-approved weights patch / human review
+- Phase 15: Proposal Adoption Tracking
+- Phase 16: Weight Version History
+- Phase 17: Impact Measurement
+- Phase 18: Meta Learning Layer
+- Phase 19: Auto Calibration Candidates
+- Phase 20: Human Override Analytics
+- Phase 21: Portfolio Layer
+- SPEC layers: SPEC-SG-001 / SPEC-RD-001 / SPEC-NQ-001 / SPEC-BC-001 / SPEC-DSR-001 / SPEC-TC-001
+- Phase 22: Narrative Lookahead Audit
+- Phase 23: Adversarial Review Agent
+- Phase 24: Data Health / Freshness
+- Phase 25: Operational Runbook & Spec Sync
+
+## 番号の繰り延べ (renumbering)
+
+旧ROADMAPは Phase 22 に **Cross Asset Regime Engine** を予定していたが、本セッションでは
+監査・品質トラックを優先し Phase 22〜25 を再割り当てした。Cross Asset Regime Engine は
+**未実装** であり、下記「Future Phases」へ繰り延べる。
 
 ## Next Target
 
-### Phase 15: Proposal Adoption Tracking
+これ以上レイヤーを増やすより、まず**運用実態を固める**段階。
 
-Track whether generated proposals were accepted, held, rejected, or superseded by human review.
+### Phase 26 候補（運用 / 仕様の地固め）
+
+- spec repo 同期の継続運用（本体 `docs/phase_status.md` を正とする）
+- `config/cost_model.json` に XMTrading 実測コストを source 付きで記入 → ネットR有効化
+  （現状 status=unconfigured）
+- Narrative Lookahead / Adversarial Review の辞書・source分類を運用しながら調整
 
 ## Future Phases
 
-### Phase 16: Weight Version History
+### Cross Asset Regime Engine（旧 Phase 22、繰り延べ）
 
-Record every approved weight change as a versioned history, without automatic mutation.
+指数・USD・金利・ゴールド・オイル・ボラ・暗号資産のクロスアセット関係を解釈する
+レジーム層。SPEC-RD-001（レジーム較正と忘却）の上に構築する。
 
-### Phase 17: Impact Measurement
+### LLM-based Adversarial Agent
 
-Measure the before/after impact of accepted proposals on signal quality, R multiple, missed opportunities, and drawdown behavior.
+現在ルールベースの Adversarial Review に、LLM による反証エージェントを追加。
+要 APIキー・課金、要 Narrative Lookahead 監査の前段（未来情報混入チェック）。
 
-### Phase 18: Meta Learning Layer
+### EVALUATIONS Accumulation（継続）
 
-Analyze which types of proposals historically improved the system and which types were noise.
-
-### Phase 19: Auto Calibration Candidates
-
-Generate higher-level calibration candidates while keeping human approval mandatory.
-
-### Phase 20: Human Override Analytics
-
-Analyze human decisions: accepted, rejected, held, overridden, and their subsequent outcomes.
-
-### Phase 21: Portfolio Layer
-
-Add portfolio-level research metrics such as asset correlation, exposure concentration, and daily risk budget simulation.
-
-### Phase 22: Cross Asset Regime Engine
-
-Build a regime layer that interprets cross-asset relationships among indices, USD, rates, gold, oil, volatility, and crypto.
+実データが溜まると Data Health が healthy へ向かい、各統計ゲート（SG/DSR等）が本格稼働。
+KPI 100 → 300 → 1000 件を追う。

@@ -1,65 +1,69 @@
-# Codex Workflow
+# Development Workflow (Codex / Claude / Human)
 
-Tactical Swing OSでは、ChatGPT、Codex、GitHub PR、Human Review、Dashboard確認を組み合わせて、小さく安全に開発を進めます。
+Tactical Swing OS は、ChatGPT/Codex による設計・レビュー、Claude Code による実装、
+Human Review、Dashboard確認を組み合わせて、小さく安全に開発を進めます。
+
+> 注: 実態の役割分担は本体repo `docs/operations_runbook.md` §5 と同期。
+> 「AIは監査される対象であり、人間が監査機」という憲章の実装です。
 
 ## Flow
 
 ```text
-ChatGPT
-↓
-Phase設計
-↓
-Codex実装
-↓
-PR
-↓
-Human Review
-↓
-Merge
-↓
-Validation Suite
-↓
-Dashboard確認
+ChatGPT / Codex（Phase設計・方針）
+        ↓
+Claude Code（実装 → テスト → セルフ敵対監査 → PR作成）
+        ↓
+Codex（PRレビュー・P2級の穴を指摘）
+        ↓
+（指摘あれば Claude が同一PRで修正）
+        ↓
+Human Review（最終判断）
+        ↓
+Merge（人間が判断）
+        ↓
+Validation Suite / Dashboard workflow 手動実行
+        ↓
+Pages確認 → 次フェーズ
 ```
 
-## ChatGPT
+## 役割分担
 
-Phaseの目的、仕様、安全条件、期待出力を整理します。曖昧な要求を実装可能な単位へ分解します。
+### ChatGPT / Codex（設計・レビュー）
+Phaseの目的・仕様・安全条件・期待出力を整理し、曖昧な要求を実装可能な単位へ分解する。
+実装後は GitHub 上で PR をレビューし、スコープ・安全条件・P2級の穴（偽passed、
+入力欠落、false-fresh 等）を指摘する。
 
-## Phase設計
+### Claude Code（実装）
+リポジトリを読み、既存構造に沿って実装する。各フェーズで**セルフ敵対監査**
+（複数エージェントによる correctness / safety / integration / test-gap レビュー →
+各findingを独立検証）を回し、自分の書いたコードのバグを潰す。生成物（results/reports）は
+コミットせず、ソース・workflow・docs・test を中心に変更し、PR を作成する。
 
-各Phaseは小さく区切ります。1つのPhaseで実装する内容、禁止事項、検証条件、PR本文に含める安全条件を明確にします。
+### Human（主任研究員）
+PR内容・Dashboard表示・安全条件・artifact を確認し、**マージの可否を最終判断**する。
+workflow の手動実行と Pages確認を行い、weights / rules / proposals の採否を
+**研究上**レビューする（weights や rule の採用に関わるものは人間確認が必須）。
 
-## Codex実装
+**実資金判断・発注・証券会社操作は Tactical Swing OS の範囲外であり、この
+workflow には含めない。** 人間による最終判断とは「研究上の採否とマージの判断」を
+指し、本プロジェクト内での発注許可を意味しない。
 
-Codexはリポジトリを読み、既存構造に沿って実装します。生成物はコミットせず、ソース、workflow、docs、testを中心に変更します。
+## セルフ敵対監査の実績
 
-## PR
+本セッションでは、Claude のセルフ敵対監査が実バグを複数発見・修正した:
+- Adversarial Review（Phase 23）: auto_calibration のデッドルール、num()のinfガード欠如、
+  NaN誤検出
+- Data Health（Phase 24）: 丸めによる false-fresh（staleを最大3分fresh表示）
 
-変更は小さなPR単位で作成します。PR本文には実装内容、安全条件、検証結果を記載します。
-
-## Human Review
-
-人間がPR内容、Dashboard表示、安全条件、artifactを確認します。特にweightsやruleの採用に関わるものは人間確認が必須です。
-
-## Merge
-
-merge前にテストとworkflow構文を確認します。merge後はValidation Suiteで主要パイプラインを確認します。
-
-## Validation Suite
-
-Validation Suiteは主要分析パイプラインが一括で通るか確認する手動workflowです。Sheets書き込み、Pages deploy、実売買、発注は行いません。
-
-## Dashboard確認
-
-最終的な確認はDashboardで行います。Signals、Evaluations、Feedback、Proposals、Audit、Reviewが人間に読める形で表示されているか確認します。
+AIが書いたコードをAIが敵対的に監査して潰す = 憲章「AIは監査される対象」の実践。
 
 ## Rules
 
 - 小さなPR単位で進める
-- merge前に検証する
-- merge後にValidation Suiteを実行する
-- Dashboardを確認する
-- Safety Auditを確認する
+- 実装前にセルフ敵対監査の観点（correctness / safety / integration / test gaps）を意識する
+- merge前にテスト・workflow構文を確認する
+- merge後に Validation Suite を実行し Dashboard / Pages を確認する
+- Safety Audit / Adversarial Review / Data Health を確認する
 - `weights.json` と `generate_signal.py` は自動変更しない
 - 実売買・発注・XM操作は行わない
+- GitHub Actions から git push しない
