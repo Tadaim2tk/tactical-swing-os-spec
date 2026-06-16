@@ -43,6 +43,10 @@ The following actions are allowed.
 - Portfolio risk設定の変更
 - 実運用に関わる設定変更
 
+**人間による最終判断は、Tactical Swing OS内での発注許可を意味しない。**
+実資金・発注・証券会社操作は本プロジェクトの範囲外であり、このworkflowには含めない。
+人間の役割は研究上の採否とマージの判断に限られる。
+
 ## GitHub Actions Safety
 
 GitHub Actionsは分析・生成・artifact保存・Pages公開に限定します。
